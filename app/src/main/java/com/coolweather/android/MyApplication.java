@@ -9,7 +9,7 @@ import com.coolweather.android.db.greendao.DaoSession;
 public class MyApplication extends Application {
 
     private static final String DB_NAME = "coll_weather";   //数据库名
-    private DaoSession mDaoSession;
+    private static DaoSession mDaoSession;
 
     @Override
     public void onCreate() {
@@ -25,7 +25,7 @@ public class MyApplication extends Application {
         mDaoSession = daoMaster.newSession();
     }
 
-    public DaoSession getDaoSession() {
+    public static DaoSession getDaoSession() {
         return mDaoSession;
     }
 

@@ -27,7 +27,7 @@ public class CityDao extends AbstractDao<City, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property CityName = new Property(1, String.class, "cityName", false, "CITY_NAME");
         public final static Property CityCode = new Property(2, int.class, "cityCode", false, "CITY_CODE");
-        public final static Property ProvinceId = new Property(3, int.class, "provinceId", false, "PROVINCE_ID");
+        public final static Property ProvinceId = new Property(3, Long.class, "provinceId", false, "PROVINCE_ID");
     }
 
 
@@ -92,7 +92,7 @@ public class CityDao extends AbstractDao<City, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // cityName
             cursor.getInt(offset + 2), // cityCode
-            cursor.getInt(offset + 3) // provinceId
+            cursor.getLong(offset + 3) // provinceId
         );
         return entity;
     }
@@ -102,7 +102,7 @@ public class CityDao extends AbstractDao<City, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setCityName(cursor.getString(offset + 1));
         entity.setCityCode(cursor.getInt(offset + 2));
-        entity.setProvinceId(cursor.getInt(offset + 3));
+        entity.setProvinceId(cursor.getLong(offset + 3));
      }
     
     @Override

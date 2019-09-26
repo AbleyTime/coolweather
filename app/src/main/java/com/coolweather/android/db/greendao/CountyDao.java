@@ -27,7 +27,7 @@ public class CountyDao extends AbstractDao<County, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property CountyName = new Property(1, String.class, "countyName", false, "COUNTY_NAME");
         public final static Property WeatherId = new Property(2, String.class, "weatherId", false, "WEATHER_ID");
-        public final static Property CityId = new Property(3, int.class, "cityId", false, "CITY_ID");
+        public final static Property CityId = new Property(3, Long.class, "cityId", false, "CITY_ID");
     }
 
 
@@ -92,7 +92,7 @@ public class CountyDao extends AbstractDao<County, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // countyName
             cursor.getString(offset + 2), // weatherId
-            cursor.getInt(offset + 3) // cityId
+            cursor.getLong(offset + 3) // cityId
         );
         return entity;
     }
@@ -102,7 +102,7 @@ public class CountyDao extends AbstractDao<County, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setCountyName(cursor.getString(offset + 1));
         entity.setWeatherId(cursor.getString(offset + 2));
-        entity.setCityId(cursor.getInt(offset + 3));
+        entity.setCityId(cursor.getLong(offset + 3));
      }
     
     @Override

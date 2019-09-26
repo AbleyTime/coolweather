@@ -14,39 +14,50 @@ public class City {
     @NotNull
     private int cityCode;       //记录市的代号
     @NotNull
-    private int provinceId;      //记录当前市所属省的id
-    @Generated(hash = 1830028339)
-    public City(Long id, @NotNull String cityName, int cityCode, int provinceId) {
+    private Long provinceId;      //记录当前市所属省的id
+
+    @Generated(hash = 277886640)
+    public City(Long id, @NotNull String cityName, int cityCode,
+                @NotNull Long provinceId) {
         this.id = id;
         this.cityName = cityName;
         this.cityCode = cityCode;
         this.provinceId = provinceId;
     }
+
     @Generated(hash = 750791287)
     public City() {
     }
+
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getCityName() {
         return this.cityName;
     }
+
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+
     public int getCityCode() {
         return this.cityCode;
     }
+
     public void setCityCode(int cityCode) {
         this.cityCode = cityCode;
     }
-    public int getProvinceId() {
+
+    public Long getProvinceId() {
         return this.provinceId;
     }
-    public void setProvinceId(int provinceId) {
+
+    public void setProvinceId(Long provinceId) {
         this.provinceId = provinceId;
     }
 

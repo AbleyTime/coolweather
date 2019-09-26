@@ -13,10 +13,10 @@ public class County {
     @NotNull
     private String weatherId;       //记录区县所对应的天气id
     @NotNull
-    private int cityId;     //记录当前县所属市
-    @Generated(hash = 1961434643)
+    private Long cityId;     //记录当前县所属市
+    @Generated(hash = 526466147)
     public County(Long id, @NotNull String countyName, @NotNull String weatherId,
-            int cityId) {
+            @NotNull Long cityId) {
         this.id = id;
         this.countyName = countyName;
         this.weatherId = weatherId;
@@ -43,10 +43,10 @@ public class County {
     public void setWeatherId(String weatherId) {
         this.weatherId = weatherId;
     }
-    public int getCityId() {
+    public Long getCityId() {
         return this.cityId;
     }
-    public void setCityId(int cityId) {
+    public void setCityId(Long cityId) {
         this.cityId = cityId;
     }
 
