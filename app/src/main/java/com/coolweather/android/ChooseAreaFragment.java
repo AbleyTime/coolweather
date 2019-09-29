@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.coolweather.android.adapter.PlaceAdapter;
 import com.coolweather.android.db.greendao.CityDao;
 import com.coolweather.android.db.greendao.CountyDao;
@@ -26,10 +29,13 @@ import com.coolweather.android.db.pojo.Province;
 import com.coolweather.android.my_interface.MyCallback;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -179,9 +185,9 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
     /*
     根据传入的请求地址和数据种类从服务器中查询对应数据
      */
-    private void queryFromServer(String address,final String type) {
+    private void queryFromServer(String address, final String type) {
         showProgressDialog();//展示ProgressDialog,实现加载数据的效果
-        Log.d(TAG, "请求地址："+address);
+        Log.d(TAG, "请求地址：" + address);
         //发送网络请求并在回调函数中处理结果
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
@@ -195,7 +201,7 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
                         Toast.makeText(getContext(), "加载失败！", Toast.LENGTH_SHORT).show();
                     }
                 });
-                Log.e(TAG, "响应失败错误提示："+e.getMessage());
+                Log.e(TAG, "响应失败错误提示：" + e.getMessage());
             }
 
             @Override
@@ -230,7 +236,7 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
                             }
                         }
                     });
-                }else {
+                } else {
                     Log.d(TAG, "数据解析失败！");
                 }
             }
@@ -241,20 +247,30 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
     //回调接口的具体逻辑，根据不同的item数据响应不同的操作
     @Override
     public void positionCallback(int position) {
-        Intent intent ;
+        Intent intent;
         if (currentLevel == LEVEL_PROVINCE) {
             selectedProvince = provinceList.get(position);
             queryCities();
         } else if (currentLevel == LEVEL_CITY) {
             selectedCity = cityList.get(position);
             queryCounties();
-        }else if (currentLevel == LEVEL_COUNTY){
+        } else if (currentLevel == LEVEL_COUNTY) {
             County selectedCounty = countyList.get(position);   //获取当前选中的county
-            //跳转到WeatherActivity中，并将当前区县城市的countName和weatherId传递到WeatherActivity中
-            intent = new Intent(getContext(),WeatherActivity.class);
-            intent.putExtra("countName",selectedCounty.getCountyName());
-            intent.putExtra("weather_id",selectedCounty.getWeatherId());
-            startActivity(intent);
+            //判断当前fragment是属于那个活动中的
+            if (getActivity() instanceof MainActivity) {
+                //属于MainActivity，跳转到WeatherActivity中，并将当前区县城市的countName和weatherId传递到WeatherActivity中
+                intent = new Intent(getContext(), WeatherActivity.class);
+                intent.putExtra("countName", selectedCounty.getCountyName());
+                intent.putExtra("weather_id", selectedCounty.getWeatherId());
+                startActivity(intent);
+            } else if (getActivity() instanceof WeatherActivity) {
+                //属于WeatherActivity，发起网络请求，向服务端请求天气数据
+                WeatherActivity weatherActivity = (WeatherActivity) getActivity();
+                weatherActivity.drawerLayout.closeDrawers();    //关闭滑动菜单
+                weatherActivity.swipeRefresh.setRefreshing(true);  //打开刷新进度条
+                weatherActivity.requestWeather(selectedCounty.getWeatherId());
+            }
+
         }
     }
 
