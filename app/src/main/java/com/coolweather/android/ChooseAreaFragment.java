@@ -1,6 +1,7 @@
 package com.coolweather.android;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.coolweather.android.adapter.PlaceAdapter;
 import com.coolweather.android.db.greendao.CityDao;
 import com.coolweather.android.db.greendao.CountyDao;
@@ -27,13 +26,10 @@ import com.coolweather.android.db.pojo.Province;
 import com.coolweather.android.my_interface.MyCallback;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -81,18 +77,6 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
         //初始化recycleView
         initRecyclerView();
         return view;
-    }
-
-    //根据不同的item数据响应不同的操作
-    @Override
-    public void positionCallback(int position) {
-        if (currentLevel == LEVEL_PROVINCE) {
-            selectedProvince = provinceList.get(position);
-            queryCities();
-        } else if (currentLevel == LEVEL_CITY) {
-            selectedCity = cityList.get(position);
-            queryCounties();
-        }
     }
 
     @Override
@@ -253,6 +237,26 @@ public class ChooseAreaFragment extends Fragment implements MyCallback {
         });
     }
 
+
+    //回调接口的具体逻辑，根据不同的item数据响应不同的操作
+    @Override
+    public void positionCallback(int position) {
+        Intent intent ;
+        if (currentLevel == LEVEL_PROVINCE) {
+            selectedProvince = provinceList.get(position);
+            queryCities();
+        } else if (currentLevel == LEVEL_CITY) {
+            selectedCity = cityList.get(position);
+            queryCounties();
+        }else if (currentLevel == LEVEL_COUNTY){
+            County selectedCounty = countyList.get(position);   //获取当前选中的county
+            //跳转到WeatherActivity中，并将当前区县城市的countName和weatherId传递到WeatherActivity中
+            intent = new Intent(getContext(),WeatherActivity.class);
+            intent.putExtra("countName",selectedCounty.getCountyName());
+            intent.putExtra("weather_id",selectedCounty.getWeatherId());
+            startActivity(intent);
+        }
+    }
 
     /*
     初始化recycleView

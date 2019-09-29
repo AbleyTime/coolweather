@@ -52,9 +52,11 @@ public class PlaceAdapter extends RecyclerView.Adapter {
         itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.place_item, parent, false);
         final ViewHolder holder = new ViewHolder(itemView);
+        //给每个item绑定单击事件
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //回调接口
                 myCallback.positionCallback(holder.getAdapterPosition());
             }
         });
