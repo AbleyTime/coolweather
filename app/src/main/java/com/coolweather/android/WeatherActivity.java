@@ -5,6 +5,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.coolweather.android.fastjson.Forecast;
 import com.coolweather.android.fastjson.Weather;
+import com.coolweather.android.service.AutoUpdateService;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
 
@@ -127,6 +129,7 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 requestWeather(mWeatherId);
+                loadBingPic();
             }
         });
 
@@ -189,10 +192,8 @@ public class WeatherActivity extends AppCompatActivity {
                         swipeRefresh.setRefreshing(false);  //关闭下拉刷新进度条
                     }
                 });
-
             }
         });
-
     }
 
 
@@ -234,6 +235,10 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        //启动后台自动更新天气数据和背景图片的的服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     /*
@@ -244,13 +249,13 @@ public class WeatherActivity extends AppCompatActivity {
         HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(TAG, "onFailure: 响应失败！");
+                Log.d(TAG, "loadBingPic: 响应失败！");
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d(TAG, "onResponse: 响应成功！");
+                Log.d(TAG, "loadBingPic: 响应成功！");
                 final String bingPic = response.body().string();
                 SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                 edit.putString("bing_pic", bingPic);
